@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .dancing-script {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Background gradient */
+        .bg-romantic {
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe4f1 25%, #ffd4ea 50%, #ffe4f1 75%, #ffeef8 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Main text animation */
+        .fade-zoom-in {
+            animation: fadeZoomIn 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeZoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Subtitle animation */
+        .fade-in-up {
+            animation: fadeInUp 1.5s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Button animation */
+        .fade-in-button {
+            animation: fadeInUp 1.5s ease-out 1s forwards;
+            opacity: 0;
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: fixed;
+            bottom: -50px;
+            font-size: 30px;
+            animation: floatUp 8s ease-in infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -50px;
+                opacity: 1;
+                transform: translateX(0) rotate(0deg);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateX(100px) rotate(180deg);
+            }
+            100% {
+                bottom: 120%;
+                opacity: 0;
+                transform: translateX(-100px) rotate(360deg);
+            }
+        }
+
+        /* Button hover effect */
+        .btn-romantic {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
+        }
+
+        .btn-romantic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 154, 158, 0.6);
+        }
+
+        .btn-romantic:active {
+            transform: translateY(0);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #ffe4f1;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #ff9a9e;
+            border-radius: 10px;
+        }
+
+        /* Audio button */
+        .audio-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+            animation: fadeInUp 1.5s ease-out 1.5s forwards;
+            opacity: 0;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-icon {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .audio-btn.playing .audio-icon {
+            animation: pulse 1s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleAnim 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px white;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-romantic min-h-screen">
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Main Content -->
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative z-20">
+        <!-- Main Heading -->
+        <h1 class="dancing-script text-4xl md:text-6xl lg:text-7xl text-center text-pink-600 mb-8 fade-zoom-in px-4 font-bold leading-tight">
+            Chúc mừng sinh nhật<br>cô gái mà anh thương ❤️
+        </h1>
+
+        <!-- Subtitle Message -->
+        <p class="text-base md:text-xl text-center text-pink-500 mb-12 max-w-2xl fade-in-up px-4 font-medium leading-relaxed">
+            Chúc em luôn vui vẻ, xinh đẹp và hạnh phúc.<br>
+            Cảm ơn em vì đã xuất hiện trong cuộc đời anh.
+        </p>
+
+        <!-- Button -->
+        <button id="openModal" class="btn-romantic text-white px-8 md:px-12 py-4 md:py-5 rounded-full text-lg md:text-xl font-semibold fade-in-button transform transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
+            💝 Nhấn vào đây
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content w-full md:w-4/5 lg:w-3/4 xl:w-2/3">
+            <!-- Close Button -->
+            <div class="sticky top-0 bg-white z-10 p-4 flex justify-end border-b border-pink-100">
+                <button id="closeModal" class="text-pink-500 hover:text-pink-700 text-3xl font-bold focus:outline-none transition">&times;</button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 md:p-10">
+                <h2 class="dancing-script text-3xl md:text-5xl text-pink-600 text-center mb-8 font-bold">
+                    Những Khoảnh Khắc Đẹp Nhất 💕
+                </h2>
+
+                <!-- Gallery -->
+                <div class="gallery-grid mb-8">
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/1.png" alt="Beautiful romantic couple portrait with soft lighting and pink flowers in background">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/2.jpeg" alt="Happy moments together outdoors with sunshine and natural smile candid photography">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/3.jpeg" alt="Sweet couple holding hands at sunset beach with romantic atmosphere and warm tones">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/4.png" alt="Laughing together with joyful expression in cozy cafe intimate moment with natural light">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/5.jpeg" alt="Birthday celebration with cake and candles happy smile colorful balloons and festive atmosphere">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../birthday-website-design/img/6.png" alt="Cute selfie together with heart gesture pink cherry blossoms in spring season">
+                    </div>
+                </div>
+
+                <!-- Long Message -->
+                <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-2xl p-6 md:p-8 shadow-lg">
+                    <h3 class="dancing-script text-2xl md:text-3xl text-pink-600 text-center mb-6 font-bold">
+                        Lời Chúc Từ Trái Tim 💖
+                    </h3>
+                    <div class="text-pink-700 space-y-4 leading-relaxed text-base md:text-lg">
+                        <p>
+                            Cô gái mà ảnh thương,
+                        </p>
+                        <p>
+                            Hôm nay là một ngày đặc biệt, ngày mà một thiên thần đã đến với thế gian này. Anh muốn nói với cổ rằng, cổ là món quà tuyệt vời nhất mà cuộc đời đã trao cho anh, để anh có cơ hội gặp em và thích em.
+                        </p>
+                        <p>
+                            Mỗi ngày được nói chuyện cùng em đều là những khoảnh khắc đáng nhớ. Khuông mặt, giọng nói, nụ cười hay tính cách của em là những thứ đặt biệt với anh nó làm anh cảm thấy như là ánh nắng mặt trời sưởi ấm trái tim anh. Anh luôn trân trọn những khoẳng khắc ấy và không bao giờ quên.
+                        </p>
+                        <p>
+                            Trong ngày sinh nhật này, anh chúc em:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Luôn tràn đầy sức khỏe và năng lượng tích cực</li>
+                            <li>Luôn rạng rỡ và xinh đẹp toả sáng như ánh nắng mặt trời</li>
+                            <li>Mọi ước mơ của em đều sẽ thành hiện thực</li>
+                            <li>Hạnh phúc và bình yên luôn theo bước chân em</li>
+                            <li>Chúng ta sẽ có thêm nhiều kỷ niệm đẹp</li>
+                        </ul>
+                        <p>
+                            Anh sẽ luôn đồng hành cùng em và anh muốn sẽ luôn được đồng hành cùng em trong mọi chuyện dù là vui vẻ hay khó khăn và anh sẽ luôn là người đồng hành đáng tin cậy của em.
+                        </p>
+                        <p class="text-center font-bold text-xl md:text-2xl text-pink-600 mt-6">
+                            Chúc mừng sinh nhật cô gái mà anh thương! 🎂🎉💕
+                        </p>
+                        <p class="text-right italic mt-4">
+                            Thương cổ nhiều lắm ❤️
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Button -->
+    <div id="audioBtn" class="audio-btn" title="Phát/Tắt nhạc">
+        <span class="audio-icon">🎵</span>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="bgMusic" loop>
+        <!-- Replace this URL with your actual music file -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - Dễ dàng tùy chỉnh tại đây
+        // ============================================
+        
+        const CONFIG = {
+            // Thay đổi các URL ảnh tại đây
+            galleryImages: [
+                {
+                    url: "https://placehold.co/400x400?text=Beautiful+romantic+couple+portrait+with+soft+lighting+pink+flowers+in+background",
+                    alt: "Beautiful romantic couple portrait with soft lighting and pink flowers in background"
+                },
+                {
+                    url: "https://placehold.co/400x400?text=Happy+moments+together+outdoors+sunshine+natural+smile+candid+photography",
+                    alt: "Happy moments together outdoors with sunshine and natural smile candid photography"
+                },
+                {
+                    url: "https://placehold.co/400x400?text=Sweet+couple+holding+hands+sunset+beach+romantic+atmosphere+warm+tones",
+                    alt: "Sweet couple holding hands at sunset beach with romantic atmosphere and warm tones"
+                },
+                {
+                    url: "https://placehold.co/400x400?text=Laughing+together+joyful+expression+cozy+cafe+intimate+moment+natural+light",
+                    alt: "Laughing together with joyful expression in cozy cafe intimate moment with natural light"
+                },
+                {
+                    url: "https://placehold.co/400x400?text=Birthday+celebration+cake+candles+happy+smile+colorful+balloons+festive",
+                    alt: "Birthday celebration with cake and candles happy smile colorful balloons and festive atmosphere"
+                },
+                {
+                    url: "https://placehold.co/400x400?text=Cute+selfie+together+heart+gesture+pink+cherry+blossoms+spring+season",
+                    alt: "Cute selfie together with heart gesture pink cherry blossoms in spring season"
+                }
+            ],
+            
+            // Thay đổi nhạc nền tại đây
+            musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            
+            // Số lượng confetti
+            confettiCount: 150,
+            
+            // Số lượng trái tim bay
+            floatingHeartsCount: 15
+        };
+
+        // ============================================
+        // CONFETTI ANIMATION
+        // ============================================
+        
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const confettiParticles = [];
+        const confettiColors = ['#ff9a9e', '#fecfef', '#ffc3a0', '#ff758c', '#ff6b9d', '#c471f5'];
+
+        class Confetti {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 8 + 5;
+                this.speedY = Math.random() * 3 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 5 - 2.5;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        // Create confetti particles
+        for (let i = 0; i < CONFIG.confettiCount; i++) {
+            confettiParticles.push(new Confetti());
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiParticles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        animateConfetti();
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ============================================
+        // FLOATING HEARTS
+        // ============================================
+        
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💗';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+
+        // Create floating hearts periodically
+        setInterval(createFloatingHeart, 800);
+
+        // Initial hearts
+        for (let i = 0; i < CONFIG.floatingHeartsCount; i++) {
+            setTimeout(createFloatingHeart, i * 300);
+        }
+
+        // ============================================
+        // SPARKLES EFFECT
+        // ============================================
+        
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1500);
+        }
+
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const offsetX = (Math.random() - 0.5) * 50;
+                    const offsetY = (Math.random() - 0.5) * 50;
+                    createSparkle(e.clientX + offsetX, e.clientY + offsetY);
+                }, i * 50);
+            }
+        });
+
+        // ============================================
+        // MODAL FUNCTIONALITY
+        // ============================================
+        
+        const modal = document.getElementById('modal');
+        const openModalBtn = document.getElementById('openModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        openModalBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // ============================================
+        // BACKGROUND MUSIC
+        // ============================================
+        
+        const bgMusic = document.getElementById('bgMusic');
+        const audioBtn = document.getElementById('audioBtn');
+        let isPlaying = false;
+
+        // Set music source from config
+        bgMusic.src = CONFIG.musicUrl;
+
+        audioBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioBtn.classList.remove('playing');
+                audioBtn.querySelector('.audio-icon').textContent = '🎵';
+                isPlaying = false;
+            } else {
+                bgMusic.play().catch(err => {
+                    console.log('Cannot play audio:', err);
+                });
+                audioBtn.classList.add('playing');
+                audioBtn.querySelector('.audio-icon').textContent = '🔊';
+                isPlaying = true;
+            }
+        });
+
+        // Auto-play attempt (may be blocked by browser)
+        window.addEventListener('load', () => {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                audioBtn.classList.add('playing');
+                audioBtn.querySelector('.audio-icon').textContent = '🔊';
+            }).catch(() => {
+                // Auto-play was prevented
+                console.log('Auto-play prevented. User interaction required.');
+            });
+        });
+
+        // ============================================
+        // DYNAMIC GALLERY (Optional Enhancement)
+        // ============================================
+        
+        // If you want to dynamically update images from CONFIG
+        function updateGallery() {
+            const galleryContainer = document.querySelector('.gallery-grid');
+            if (!galleryContainer) return;
+            
+            // Clear existing images
+            galleryContainer.innerHTML = '';
+            
+            // Add images from CONFIG
+            CONFIG.galleryImages.forEach(img => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                
+                const imgElement = document.createElement('img');
+                imgElement.src = img.url;
+                imgElement.alt = img.alt;
+                
+                galleryItem.appendChild(imgElement);
+                galleryContainer.appendChild(galleryItem);
+            });
+        }
+
+        // Call this if you want to use CONFIG images
+        // updateGallery();
+
+    </script>
+</body>
+</html>
